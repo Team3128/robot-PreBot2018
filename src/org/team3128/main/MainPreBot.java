@@ -63,9 +63,9 @@ public class MainPreBot extends NarwhalRobot
 		
 		//set Followers
 		leftDrive2.set(ControlMode.Follower, leftDrive1.getDeviceID());
-		rightDrive2.set(ControlMode.Follower, rightDrive2.getDeviceID());
+		rightDrive2.set(ControlMode.Follower, rightDrive1.getDeviceID());
 		leftDrive3.set(ControlMode.Follower, leftDrive1.getDeviceID());
-		rightDrive3.set(ControlMode.Follower, rightDrive2.getDeviceID());
+		rightDrive3.set(ControlMode.Follower, rightDrive1.getDeviceID());
 		
 		//create SRXTankDrive
 		drive = new SRXTankDrive(leftDrive1, rightDrive1, wheelDiameter * Math.PI, 1, 25.25*Length.in, 30.5*Length.in, 400);
