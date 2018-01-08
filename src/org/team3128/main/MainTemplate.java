@@ -4,7 +4,10 @@ import org.team3128.common.NarwhalRobot;
 import org.team3128.common.drive.SRXTankDrive;
 import org.team3128.common.listener.ListenerManager;
 import org.team3128.common.listener.controllers.ControllerExtreme3D;
+import org.team3128.common.listener.controltypes.Button;
 import org.team3128.common.util.Constants;
+import org.team3128.common.util.Log;
+import org.team3128.common.util.datatypes.PIDConstants;
 import org.team3128.common.util.units.Length;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -17,28 +20,28 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class MainTemplate extends NarwhalRobot 
-{
+{	
 	//Drive Train
+	public double wheelDiameter;
 	public SRXTankDrive drive;
-	
 	public TalonSRX leftDrive1, leftDrive2, leftDrive3;
 	public TalonSRX rightDrive1, rightDrive2, rightDrive3;
+	private boolean fullSpeed = false;
 	
 	//Controls
-	public ListenerManager lmRight;
-	public ListenerManager lmLeft;
+	public ListenerManager listenerRight;
+	public ListenerManager listenerLeft;
 	
 	public Joystick rightJoystick;
 	public Joystick leftJoystick;
 	
-	//misc(general)
-	public double wheelDiameter;
+	//Misc(general)
 	public PowerDistributionPanel powerDistPanel;
 	
 	@Override
 	protected void constructHardware() 
 	{
-		//drivetrain setup
+		//Drive Train Setup
 		leftDrive1 = new TalonSRX(1);
 		leftDrive2 = new TalonSRX(2);
 		leftDrive3 = new TalonSRX(3);
@@ -46,33 +49,47 @@ public class MainTemplate extends NarwhalRobot
 		rightDrive2 = new TalonSRX(5);
 		rightDrive3 = new TalonSRX(6);
 		
+		//set Leaders
 		leftDrive1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
 		rightDrive1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
 		
+		//set Followers
 		leftDrive2.set(ControlMode.Follower, leftDrive1.getDeviceID());
 		rightDrive2.set(ControlMode.Follower, rightDrive2.getDeviceID());
 		leftDrive3.set(ControlMode.Follower, leftDrive1.getDeviceID());
 		rightDrive3.set(ControlMode.Follower, rightDrive2.getDeviceID());
 		
+		//create SRXTankDrive
 		drive = new SRXTankDrive(leftDrive1, rightDrive1, wheelDiameter * Math.PI, 1, 25.25*Length.in, 30.5*Length.in, 400);
 		
 		
-		//general electronics
+		//instantiate PDP
 		powerDistPanel = new PowerDistributionPanel();
 		
-		//listeners
+		//set Listeners
 		rightJoystick = new Joystick(0);
 		leftJoystick = new Joystick(1);
 
-		lmRight = new ListenerManager(rightJoystick, leftJoystick);
-		lmLeft = new ListenerManager(new Joystick(3));
+		listenerRight = new ListenerManager(rightJoystick, leftJoystick);
+		listenerLeft = new ListenerManager(new Joystick(3));
 	}
 
 	@Override
 	protected void setupListeners() {
-		lmRight.nameControl(ControllerExtreme3D.TWIST, "moveTurn");
-		lmRight.nameControl(ControllerExtreme3D.JOYY, "moveForward");
-		lmRight.nameControl(ControllerExtreme3D.THROTTLE, "moveThrottle");
+		listenerRight.nameControl(ControllerExtreme3D.TWIST, "moveTurn");
+		listenerRight.nameControl(ControllerExtreme3D.JOYY, "moveForward");
+		listenerRight.nameControl(ControllerExtreme3D.THROTTLE, "Throttle");
+		listenerRight.nameControl(new Button(1), "fullSpeed");
+
+		
+		listenerRight.addMultiListener(() -> {
+			drive.arcadeDrive(listenerRight.getAxis("moveTurn"),
+					listenerRight.getAxis("moveForward"),
+					-1 * listenerRight.getAxis("Throttle"),
+					true);
+		}, "moveTurn", "MoveForward", "Throttle", "fullSpeed");
+		listenerRight.addButtonDownListener("fullSpeed", this::switchFullSpeed);
+		addListenerManager(listenerLeft);
 		
 	}
 
@@ -92,5 +109,10 @@ public class MainTemplate extends NarwhalRobot
 	protected void autonomousInit() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void switchFullSpeed()
+	{
+		fullSpeed = !fullSpeed;
 	}
 }
