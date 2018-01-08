@@ -16,6 +16,6 @@ public class CalibrateRunPID extends CommandGroup {
 	public CalibrateRunPID(MainPreBot robot) 
 	{
 		//not sure of the length of run(second parameter)
-		addSequential(robot.drive.new CmdMoveForward(100 * Length.in, 10000, 1));
+		addSequential(robot.drive.new CmdMoveForward(100 * Length.in, 5000, 1));
 	}
 }
