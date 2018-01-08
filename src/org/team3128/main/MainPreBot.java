@@ -1,5 +1,13 @@
+/*
+ * Created By: Adham Elarabawy
+ * Date: 1/8/2018
+ * Description: Setup teleop and autonomous(100 in drive) modes for 2018 PreBot for testing purposes
+ *
+ */
+
 package org.team3128.main;
 
+import org.team3128.autonomous.CalibrateRunPID;
 import org.team3128.common.NarwhalRobot;
 import org.team3128.common.drive.SRXTankDrive;
 import org.team3128.common.listener.ListenerManager;
@@ -19,7 +27,7 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
-public class MainTemplate extends NarwhalRobot 
+public class MainPreBot extends NarwhalRobot 
 {	
 	//Drive Train
 	public double wheelDiameter;
@@ -96,18 +104,21 @@ public class MainTemplate extends NarwhalRobot
   
 	protected void constructAutoPrograms(SendableChooser<CommandGroup> programChooser)
 	{		
-
+		programChooser.addDefault("None", null);
+		programChooser.addObject("Calibrate PID", new CalibrateRunPID(this));
 	}
 
 	@Override
 	protected void teleopInit() {
-		// TODO Auto-generated method stub
+		//set full speed to true
+		fullSpeed = true;
 		
 	}
 
 	@Override
 	protected void autonomousInit() {
-		// TODO Auto-generated method stub
+		//set full speed to false
+		fullSpeed = false;
 		
 	}
 	
