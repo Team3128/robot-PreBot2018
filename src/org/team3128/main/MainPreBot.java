@@ -56,12 +56,12 @@ public class MainPreBot extends NarwhalRobot
 	protected void constructHardware() 
 	{
 		//Drive Train Setup
-		leftDrive1 = new TalonSRX(1);
-		leftDrive2 = new TalonSRX(2);
-		leftDrive3 = new TalonSRX(3);
-		rightDrive1 = new TalonSRX(4);
-		rightDrive2 = new TalonSRX(5);
-		rightDrive3 = new TalonSRX(6);
+		leftDrive1 = new TalonSRX(20);
+		leftDrive2 = new TalonSRX(21);
+		leftDrive3 = new TalonSRX(22);
+		rightDrive1 = new TalonSRX(10);
+		rightDrive2 = new TalonSRX(11);
+		rightDrive3 = new TalonSRX(12);
 		
 		//set Leaders
 		leftDrive1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
@@ -84,7 +84,6 @@ public class MainPreBot extends NarwhalRobot
 		leftJoystick = new Joystick(1);
 
 		listenerRight = new ListenerManager(rightJoystick, leftJoystick);
-		listenerLeft = new ListenerManager(new Joystick(3));
 	}
 
 	@Override
