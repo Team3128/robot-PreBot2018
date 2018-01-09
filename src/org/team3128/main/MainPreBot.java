@@ -17,6 +17,7 @@ import org.team3128.common.util.Constants;
 import org.team3128.common.util.Log;
 import org.team3128.common.util.datatypes.PIDConstants;
 import org.team3128.common.util.units.Length;
+import org.team3128.mechanisms.intakeMechanism;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -24,11 +25,13 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class MainPreBot extends NarwhalRobot 
 {	
+	
 	//Drive Train
 	public double wheelDiameter;
 	public SRXTankDrive drive;
@@ -42,6 +45,9 @@ public class MainPreBot extends NarwhalRobot
 	
 	public Joystick rightJoystick;
 	public Joystick leftJoystick;
+	
+	//Mechanisms
+	public intakeMechanism intake;
 	
 	//Misc(general)
 	public PowerDistributionPanel powerDistPanel;
@@ -69,7 +75,6 @@ public class MainPreBot extends NarwhalRobot
 		
 		//create SRXTankDrive
 		drive = new SRXTankDrive(leftDrive1, rightDrive1, wheelDiameter * Math.PI, 1, 25.25*Length.in, 30.5*Length.in, 400);
-		
 		
 		//instantiate PDP
 		powerDistPanel = new PowerDistributionPanel();
