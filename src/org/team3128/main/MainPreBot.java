@@ -41,7 +41,7 @@ public class MainPreBot extends NarwhalRobot
 	public ListenerManager listenerLeft;
 	
 	public Joystick rightJoystick;
-	public Joystick leftJoystick;
+	//public Joystick leftJoystick;
 	
 	//Misc(general)
 	public PowerDistributionPanel powerDistPanel;
@@ -50,12 +50,12 @@ public class MainPreBot extends NarwhalRobot
 	protected void constructHardware() 
 	{
 		//Drive Train Setup
-		leftDrive1 = new TalonSRX(1);
-		leftDrive2 = new TalonSRX(2);
-		leftDrive3 = new TalonSRX(3);
-		rightDrive1 = new TalonSRX(4);
-		rightDrive2 = new TalonSRX(5);
-		rightDrive3 = new TalonSRX(6);
+		leftDrive1 = new TalonSRX(20);
+		leftDrive2 = new TalonSRX(21);
+		leftDrive3 = new TalonSRX(22);
+		rightDrive1 = new TalonSRX(10);
+		rightDrive2 = new TalonSRX(11);
+		rightDrive3 = new TalonSRX(12);
 		
 		//set Leaders
 		leftDrive1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
@@ -76,10 +76,10 @@ public class MainPreBot extends NarwhalRobot
 		
 		//set Listeners
 		rightJoystick = new Joystick(0);
-		leftJoystick = new Joystick(1);
+		//leftJoystick = new Joystick(1);
 
-		listenerRight = new ListenerManager(rightJoystick, leftJoystick);
-		listenerLeft = new ListenerManager(new Joystick(3));
+		listenerRight = new ListenerManager(rightJoystick);
+		//listenerLeft = new ListenerManager(new Joystick(3));
 	}
 
 	@Override
@@ -88,16 +88,19 @@ public class MainPreBot extends NarwhalRobot
 		listenerRight.nameControl(ControllerExtreme3D.JOYY, "moveForward");
 		listenerRight.nameControl(ControllerExtreme3D.THROTTLE, "Throttle");
 		listenerRight.nameControl(new Button(1), "fullSpeed");
-
+		Log.info("MainPreBot", "setupListeners entered");
 		
 		listenerRight.addMultiListener(() -> {
+			Log.info("MainPreBot", "multi listener entered");
+			
 			drive.arcadeDrive(listenerRight.getAxis("moveTurn"),
 					listenerRight.getAxis("moveForward"),
 					-1 * listenerRight.getAxis("Throttle"),
 					true);
-		}, "moveTurn", "MoveForward", "Throttle", "fullSpeed");
+		}, "moveTurn", "moveForward", "Throttle", "fullSpeed");
+		
 		listenerRight.addButtonDownListener("fullSpeed", this::switchFullSpeed);
-		addListenerManager(listenerLeft);
+		//addListenerManager(listenerLeft);
 		
 	}
 
