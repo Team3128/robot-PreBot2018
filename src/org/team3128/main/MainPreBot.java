@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class MainPreBot extends NarwhalRobot {
 	// Drive Train
@@ -54,18 +55,22 @@ public class MainPreBot extends NarwhalRobot {
 		rightDrive1 = new TalonSRX(10);
 		rightDrive2 = new TalonSRX(11);
 		rightDrive3 = new TalonSRX(12);
-		
-		rightDrive1.setInverted(true);
+
+		rightDrive2.setInverted(true);
 
 		// set Leaders
-		leftDrive1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
-		rightDrive1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, Constants.CAN_TIMEOUT);
+		// leftDrive1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+		// 0, Constants.CAN_TIMEOUT);
+		// rightDrive1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+		// 0, Constants.CAN_TIMEOUT);
 
 		// set Followers
 		leftDrive2.set(ControlMode.Follower, leftDrive1.getDeviceID());
 		rightDrive2.set(ControlMode.Follower, rightDrive1.getDeviceID());
 		leftDrive3.set(ControlMode.Follower, leftDrive1.getDeviceID());
 		rightDrive3.set(ControlMode.Follower, rightDrive1.getDeviceID());
+
+		//rightDrive2.setInverted(true);
 
 		// create SRXTankDrive
 		drive = new SRXTankDrive(leftDrive1, rightDrive1, wheelDiameter * Math.PI, 1, 25.25 * Length.in,
@@ -97,8 +102,8 @@ public class MainPreBot extends NarwhalRobot {
 			double x = listenerRight.getAxis("moveX");
 			double y = listenerRight.getAxis("moveTurn");
 			double t = listenerRight.getAxis("Throttle") * -1;
-			
-			drive.arcadeDrive(x,y, t, true);
+
+			drive.arcadeDrive(x, y, t, true);
 		}, "moveX", "moveTurn", "Throttle", "fullSpeed");
 
 		listenerRight.addButtonDownListener("fullSpeed", this::switchFullSpeed);
@@ -121,6 +126,10 @@ public class MainPreBot extends NarwhalRobot {
 		// set full speed to false
 		fullSpeed = false;
 
+	}
+	
+	protected void updateDashboard() {
+		SmartDashboard.putNumber("Right Leader Current", powerDistPanel.getCurrent(13));
 	}
 
 	public void switchFullSpeed() {
